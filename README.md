@@ -19,7 +19,7 @@ An integration guide how you configure your PHPStorm properly.
 A perfectly written and generic bash script. It works for my purpose but it may not work for yours.
 
 ### Usage
-1. [Configure PHPStorm](docs/blob/master/phpstorm-configuration/README.md)
+1. [Configure PHPStorm](docs/phpstorm-configuration/README.md)
 2. Learn [how to use it](docs/debug-tests-files/README.md)  in PHPStorm
 
 

@@ -25,6 +25,7 @@ docker_net_gateway=${LOCAL_DOCKER_DNS}
 idekey=xdebug
 project=
 serverName=local
+executable=/usr/bin/php
 
 while [ "$1" != "" ]; do
     key=$(echo $1 | cut -d "=" -f1)
@@ -61,8 +62,14 @@ while [ "$1" != "" ]; do
 done
 
 # determine the docker container running php (get the last chunk of a string that is separated by a dot)
-if [ ! -z "$project" ]; then
+if [ -z "$docker_container" ] && [ ! -z "$project" ]; then
     docker_container=`echo $(echo "$project" | awk -F. '{print $NF}')-php`
+fi
+
+# Add a trailing slash if it is a directory
+fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
+if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
+    file="$file/"
 fi
 
 docker exec "$docker_container" \

@@ -15,5 +15,5 @@ _Tool settings_
 
 ![external tool](external-tool.png)
 
-The options `--file` and `--method` are necessary for file/method debugging.
+The options `--file=$FileRelativePath$` and `--method=$SelectedText$` are necessary for directory/file/method debugging.
 If you want to run/debug all tests then create another external tool and omit the options.

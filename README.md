@@ -1,7 +1,7 @@
 # docker-xdebug-phpstorm
 Shell script to enable "single click debugging" of unit/codeception tests from within phpstorm.
 
-You will be able to run/debug all tests, a single file or a single method.
+You will be able to run/debug all tests, a directory, a single file or a single method.
 
 ### Why?
 Have you ever tried to debug a project and its tests that runs in a docker container? 

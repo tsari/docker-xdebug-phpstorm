@@ -7,8 +7,8 @@ function usage
     echo "usage: bash docker_xdebug [options]
 Options:
     --container=         The docker container that should be use for execution. [required when -p|--project-name is absent]
-    --codeception        Debug codeception tests.
-    --docker-gateway=    The ip of the docker network gateway. This allows xdebug to connect to your host. [default: ${LOCAL_DOCKER_DNS}]
+    --codeception        Run codeception tests.
+    --debug              Enable debugging with xdebug.
     --file=              File to debug relative to project root.
     --idekey=            Your xdebug idekey. [default: xdebug]
     --method=            Method to debug. Works only in combination with -f|--file.
@@ -21,36 +21,45 @@ Options:
     "
 }
 
-docker_net_gateway=${LOCAL_DOCKER_DNS}
-idekey=xdebug
+function xdebugSettings(){
+    if [ "$debug" = "true" ]; then
+        # now we can determine the gateway ip to communicate with the host
+        docker_net_gateway=$(docker inspect -f '{{range .NetworkSettings.Networks}}{{.Gateway}}/{{end}}' "$docker_container" | awk -F/ '{print $1}')
+        xdebug_settings="-dxdebug.remote_autostart=1 -dxdebug.remote_host=${docker_net_gateway}"
+    fi
+}
+
+idekey="xdebug"
 project=
-serverName=local
-executable=/usr/bin/php
+serverName="local"
+executable="/usr/bin/php"
+xdebug_settings=
+debug="false"
 
 while [ "$1" != "" ]; do
     key=$(echo $1 | cut -d "=" -f1)
     value=$(echo $1 | awk -F\= '{print $NF}')
 
     case $key in
-        --server )          serverName=$value
+        --server )          serverName="$value"
                             ;;
-        --container )       docker_container=$value
+        --container )       docker_container="$value"
                             ;;
-        --file )            file=$value
+        --file )            file="$value"
                             ;;
-        --method )          if [ ! -z $value ]; then method=:$value; fi
+        --method )          method="$value"
                             ;;
-        --idekey )          idekey=$value
+        --idekey )          idekey="$value"
                             ;;
-        --docker-gateway )  docker_net_gateway=$value
-                            ;;
-        --project-name )    project=$value
+        --project-name )    project="$value"
                             ;;
         --codeception )     executable="vendor/bin/codecept run"
                             ;;
-        --phpunit )         executable=vendor/bin/phpunit
+        --phpunit )         executable="vendor/bin/phpunit"
                             ;;
-        --php )             executable=/usr/bin/php
+        --php )             executable="$executable"
+                            ;;
+        --debug )           debug="true"
                             ;;
         -h | --help )       usage
                             exit
@@ -66,16 +75,26 @@ if [ -z "$docker_container" ] && [ ! -z "$project" ]; then
     docker_container=`echo $(echo "$project" | awk -F. '{print $NF}')-php`
 fi
 
+# generate xdebug settings string
+xdebugSettings
+
+command="$executable $file"
 # Add a trailing slash if it is a directory
-fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
-if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
-    file="$file/"
+if [ -z "$method" ]; then
+    fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
+    if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
+        file="$file/"
+    fi
+else
+    # if there is a method, we need to build the command depending on the executable
+    if [[ "$executable" =~ "phpunit" ]]; then
+        command="$executable --filter $method $file"
+    else
+        command="$executable $file:$method"
+    fi
 fi
 
 docker exec "$docker_container" \
     bash -c "XDEBUG_CONFIG='idekey=$idekey' \
              PHP_IDE_CONFIG='serverName=$serverName' \
-             php \
-                -dxdebug.remote_autostart=1 \
-                -dxdebug.remote_host=${docker_net_gateway} \
-                ${executable} $file$method"
+             php $xdebug_settings ${command}"

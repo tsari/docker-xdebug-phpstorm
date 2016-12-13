@@ -25,12 +25,12 @@ A perfectly written and generic bash script. It works for my purpose but it may 
 
 3. _Use the plain shell script if you want. But I built this just as wrapper for the PHPStorm integration._
 ```
-bash docker_xdebug -h
+bash docker_xdebug --help
 usage: bash docker_xdebug [options]
 Options:
     --container=         The docker container that should be use for execution. [required when -p|--project-name is absent]
-    --codeception        Debug codeception tests.
-    --docker-gateway=    The ip of the docker network gateway. This allows xdebug to connect to your host. [default: Value from $LOCAL_DOCKER_DNS environment var]
+    --codeception        Run codeception tests.
+    --debug              Enable debugging with xdebug.
     --file=              File to debug relative to project root.
     --idekey=            Your xdebug idekey. [default: xdebug]
     --method=            Method to debug. Works only in combination with -f|--file.

@@ -33,7 +33,7 @@ while [ "$1" != "" ]; do
     case $key in
         --server )          serverName=$value
                             ;;
-        --container )       docker-container=$value
+        --container )       docker_container=$value
                             ;;
         --file )            file=$value
                             ;;

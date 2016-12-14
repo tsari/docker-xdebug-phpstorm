@@ -97,7 +97,7 @@ if [ ! -z "$method" ]; then
     fi
 fi
 
-docker exec "$docker_container" \
+docker exec -u $(id -u):$(id -g) "$docker_container" \
     bash -c "XDEBUG_CONFIG='idekey=$idekey' \
              PHP_IDE_CONFIG='serverName=$serverName' \
              php $xdebug_settings ${command}"

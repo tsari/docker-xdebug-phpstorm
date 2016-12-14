@@ -79,9 +79,11 @@ fi
 xdebugSettings
 
 # Add a trailing slash if it is a directory
-fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
-if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
-    file="$file/"
+if [ ! -z "$file" ]; then
+    fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
+    if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
+        file="$file/"
+    fi
 fi
 
 command="$executable $file"

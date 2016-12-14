@@ -78,15 +78,16 @@ fi
 # generate xdebug settings string
 xdebugSettings
 
-command="$executable $file"
 # Add a trailing slash if it is a directory
-if [ -z "$method" ]; then
-    fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
-    if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
-        file="$file/"
-    fi
-else
-    # if there is a method, we need to build the command depending on the executable
+fileOrDir=$(echo "$file" | awk -F/ '{print $NF}')
+if [ $(tr -dc "." <<< "$fileOrDir" | wc -c) = 0 ];then
+    file="$file/"
+fi
+
+command="$executable $file"
+
+# if there is a method, we need to build the command depending on the executable
+if [ ! -z "$method" ]; then
     if [[ "$executable" =~ "phpunit" ]]; then
         command="$executable --filter $method $file"
     else

@@ -1,0 +1,8 @@
+version: '2'
+services:
+  php:
+    container_name: docker-xdebug-phpstorm-php
+    hostname: docker-xdebug-phpstorm-php
+    image: tsari/jessie-php-fpm-xdebug
+    volumes:
+      - ".:/var/www"

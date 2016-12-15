@@ -1,0 +1,16 @@
+{
+    "name": "tsari/docker-xdebug-phpstorm",
+    "description": "Shell script as alternative for the not existing codeception phpstorm plugin.",
+    "type": "phpstorm-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tibor Sari",
+            "email": "tiborsari@gmx.de"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "codeception/codeception": "2.*"
+    }
+}

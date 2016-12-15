@@ -9,7 +9,7 @@ You may think you can do this like you've done with vagrant and add ssh to the c
 
 Really! That's the reason I was creating this script.
 
-### What you get
+### What you get.
 A script that runs a command via `docker exec` in an existing container that has it dependent containers running as well.
 So you have to start your environment with `docker-compose up -d` or similar.
 
@@ -19,11 +19,12 @@ An integration guide how you configure your PHPStorm properly.
 A perfectly written and generic bash script. It works for my purpose but it may not work for yours.
 
 ### Usage
-1. [Configure PHPStorm](docs/phpstorm-configuration/README.md)
-2. Learn [how to use it](docs/debug-tests-files/README.md)  in PHPStorm
+1. Copy the `docker_xdebug` script into your project.
+2. [Configure PHPStorm](docs/phpstorm-configuration/README.md)
+3. Learn [how to use it](docs/debug-tests-files/README.md)  in PHPStorm
 
 
-3. _Use the plain shell script if you want. But I built this just as wrapper for the PHPStorm integration._
+4. _Use the plain shell script if you want. But I built this just as wrapper for the PHPStorm integration._
 ```
 bash docker_xdebug --help
 usage: bash docker_xdebug [options]
